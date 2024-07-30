@@ -81,4 +81,10 @@ function afterAddLiquidity(
         return (this.afterAddLiquidity.selector, delta);
     }
 
+    //helper functions
+
+    function getHookData(address referrer, address referree)public pure returns (bytes memory){
+        return abi.encode(referrer,referree);
+    }
+
 }

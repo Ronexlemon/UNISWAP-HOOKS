@@ -102,7 +102,11 @@ function afterAddLiquidity(
         BalanceDelta delta,
         bytes calldata hookData
     ) external override onlyByPoolManager returns (bytes4, BalanceDelta) {
-		// We'll add more code here shortly
+		// if This is not an ETH-TOKEN pool with this hook attached,ignore
+        if (!key.currency0.isNative()) return (this.afterAddLiquidity.selector, delta);
+        //we only mint points if user is adding liquidity with ETH
+        uint256 pointsForAddingLiquidity = uint256(int256(-delta.amount0()));
+        _assignpoints(hookData, pointsForAddingLiquidity);
         return (this.afterAddLiquidity.selector, delta);
     }
 

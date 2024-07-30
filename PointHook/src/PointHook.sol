@@ -57,4 +57,16 @@ function getHookPermissions()public pure override returns(Hooks.Permissions memo
     });
 }
 
+//implementation of afterSwap
+
+function afterSwap(address,
+PoolKey calldata key,
+IPoolManager.SwapParams calldata SwapParams,
+BalanceDelta delta,
+bytes calldata hookData) external override onlyByPoolManager returns(bytes4,int128){
+
+    return(this.afterSwap.selector,0);
+
+}
+
 }

@@ -1,32 +1,66 @@
-## HOOKS FUNCTIONS
+## Foundry
 
------
-### `beforeInitialize`
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-------
+Foundry consists of:
 
+-   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+-   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-`
-- we Want to issue points in two cases
-1. when a swap occurs which buys TOKEN for ETH
-2. When liquidity is Added to the pull
+## Documentation
 
+https://book.getfoundry.sh/
 
-##### `For case (1) we can use either beforeswap or afterswap`
-##### `For case (2) we can use beforeAddLiquidity of afterAddLiquidity`
+## Usage
 
-```
-beforeSwap(address sender,
-PoolKey calldata key,
-IPoolManager.SwapParams calldata params,
-bytes calldata hookData)
+### Build
 
-
-afterSwap(address sender,
-PoolKey calldata key,
-IPoolManager.SwapParams calldata params,
-BalanceDelta delta,
-bytes calldata hookData)
+```shell
+$ forge build
 ```
 
+### Test
 
+```shell
+$ forge test
+```
+
+### Format
+
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```

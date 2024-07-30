@@ -69,4 +69,16 @@ bytes calldata hookData) external override onlyByPoolManager returns(bytes4,int1
 
 }
 
+//implementation of afterAddLiquidity
+function afterAddLiquidity(
+        address,
+        PoolKey calldata key,
+        IPoolManager.ModifyLiquidityParams calldata,
+        BalanceDelta delta,
+        bytes calldata hookData
+    ) external override onlyByPoolManager returns (bytes4, BalanceDelta) {
+		// We'll add more code here shortly
+        return (this.afterAddLiquidity.selector, delta);
+    }
+
 }

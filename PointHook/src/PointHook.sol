@@ -33,6 +33,28 @@ contract PointsHook is BaseHook,ERC20{
     string memory _symbol)
     BaseHook(_manager) ERC20(_name,_symbol,18){ }
 
+//setUp hook permissions to return 'true'
+// for the two hook functions we are using ''=> afterswap and afterAddLiquidity"
 
+function getHookPermissions()public pure override returns(Hooks.Permissions memory){
+    return Hooks.Permissions({
+         beforeInitialize: false,
+                afterInitialize: false,
+                beforeAddLiquidity: false,
+                beforeRemoveLiquidity: false,
+                afterAddLiquidity: true,
+                afterRemoveLiquidity: false,
+                beforeSwap: false,
+                afterSwap: true,
+                beforeDonate: false,
+                afterDonate: false,
+                beforeSwapReturnDelta: false,
+                afterSwapReturnDelta: false,
+                afterAddLiquidityReturnDelta: false,
+                afterRemoveLiquidityReturnDelta: false
+
+
+    });
+}
 
 }

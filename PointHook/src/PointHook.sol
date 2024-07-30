@@ -86,5 +86,33 @@ function afterAddLiquidity(
     function getHookData(address referrer, address referree)public pure returns (bytes memory){
         return abi.encode(referrer,referree);
     }
+    //_assignpoints
+
+    function _assignpoints(bytes calldata hookData, uint256 referreePoints)internal{
+        //if no referrer/referree specified no points will be issued
+
+        if(hookData.length == 0) return;
+        //Decode the referrer and referree address
+        (address referrer,address referree) = abi.decode(hookData,(address,address));
+
+        //if the referree is the address 0 ignore
+        if(referree == address(0))return;
+        //if this referree is being referred by someone for the first time,
+        //set he given referrer address as their referrer
+        //and mint POINTS_FOR_REFERRAL to that referrer address
+
+        if(referedBy[referree] == address(0) && referrer !=address(0)){
+            referedBy[referree] = referrer;
+            _mint(referrer, POINTS_FOR_REFERAL);
+        }
+
+        //Mint 10% worth of the referree's points to the referrer
+        if(referedBy[referree] != address(0)){
+            _mint(referrer, referreePoints /10);
+        }
+
+        //Mint the appropriate number of points to the referree
+        _mint(referree, referreePoints);
+    }
 
 }

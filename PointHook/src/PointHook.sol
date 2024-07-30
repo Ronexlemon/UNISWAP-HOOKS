@@ -64,6 +64,31 @@ PoolKey calldata key,
 IPoolManager.SwapParams calldata SwapParams,
 BalanceDelta delta,
 bytes calldata hookData) external override onlyByPoolManager returns(bytes4,int128){
+    // if this is not an ETH-Token pool with this hook attached,ignore
+    if(!key.currency0.isNative()) return (this.afterSwap.selector,0);
+
+    //we only mint points if user is buying TOKEN with ETH
+    if(!SwapParams.zeroForOne) return (this.afterSwap.selector,0);
+
+    //Mint points equal to 20% of ETH they spent
+    //Since its ZeroForOne Swap:
+    /**
+     * 
+     * if amountspecified <0;
+     *    this is an exact input for output swap
+     *   amount of eth they spent is equal to  |amountspecified|
+     * 
+     * if amountspecified >0:
+     *  this is an exact "output for input" swap
+     *      amount of ETH they spent is equal to BalanceDelta.amount0()
+    
+     */
+
+    uint256 ethSpendAmount  = SwapParams.amountSpecified < 0
+    ?uint256(-SwapParams.amountSpecified):uint256(int256(-delta.amount0()));
+    uint256 pointsToMint = ethSpendAmount / 5;
+
+    _assignpoints(hookData, pointsToMint);
 
     return(this.afterSwap.selector,0);
 

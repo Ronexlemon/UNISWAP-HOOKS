@@ -19,6 +19,18 @@ import {LiquidityAmounts} from "@uniswap/v4-core/test/utils/LiquidityAmounts.sol
 import "forge-std/console.sol";
 import {PointsHook} from "../src/PointHook.sol";
 contract TestPointHook is Test,Deployers{
+    using CurrencyLibrary for Currency;
+    MockERC20 public token; // token to use in the ETH-TOKEN pool
+
+    //Native tokens are represented by address(0)
+
+    Currency ethCurrency = Currency.wrap(address(0));
+
+    Currency public tokenCurrency;
+
+    function setUp()public{
+        
+    }
 
 }
 

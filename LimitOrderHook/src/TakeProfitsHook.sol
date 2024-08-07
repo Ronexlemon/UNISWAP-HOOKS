@@ -88,6 +88,25 @@ contract TakeProfitsHook is BaseHook , ERC1155 {
     }
     
 
-    
+    //getting the closet lower tick that is actually usable,given an arbitray 
+
+    function getLowerUsableTick(int24 tick,int24 tickspacing)private pure returns(int24){
+        //E.g tickspacing =60, tick = -100
+        //closet usable tick rounded-down will be  -120
+
+        //intervals = -100/60 = -1  (integer division)
+        int24 intervals  = tick/tickspacing;
+
+        //since tick <0 , we round `intervals` down to -2
+        //if tick >0, `intervals` is fine as it is
+
+        if(tick < 0 && tick % tickspacing !=0) intervals --; //round towards negative infinity
+        //actual usable tick, is intervals * tickspacing
+
+        //i.e -2*60 =-120
+        return intervals *tickspacing;
+
+
+    } 
 
 }

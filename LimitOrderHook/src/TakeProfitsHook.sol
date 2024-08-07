@@ -43,6 +43,8 @@ contract TakeProfitsHook is BaseHook , ERC1155 {
     //mapping to create a mapping to store pending orders. 
     mapping(PoolId poolId =>mapping(int24 tickToSell => mapping(bool zeroForOne => uint256 inputAmount))) public pendingOrders;
 
+    mapping(uint256 positionId => uint256 claimSupply)public claimTokensSupply;
+
 
     //contructor
 
@@ -113,5 +115,14 @@ contract TakeProfitsHook is BaseHook , ERC1155 {
 
 
     } 
+
+    //helper function for the positionID
+
+    function getPositionId(PoolKey calldata key,
+    int24 tick,
+    bool zeroForOne)public pure returns(uint256){
+        return uint256(keccak256(abi.encode(key.toId(),tick,zeroForOne)));
+
+    }
 
 }

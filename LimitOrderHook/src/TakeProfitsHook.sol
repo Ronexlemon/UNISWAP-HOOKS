@@ -20,6 +20,74 @@ import {BalanceDelta} from "v4-core/types/BalanceDelta.sol";
 import {FixedPointMathLib} from "solmate/src/utils/FixedPointMathLib.sol";
 
 
-contract TakeProfitsHook {
+contract TakeProfitsHook is BaseHook , ERC1155 {
+    // stateLibrary its used to add helper functions to the PoolManager to read storage values
+
+    using StateLibrary for IPoolManager;
+    //PoolIdLibrary to convert PoolKeys to IDS
+    using PoolIdLibrary for PoolKey;
+    //Used to represent Currency types and helper functions like `.isNative()`
+    using CurrencyLibrary for Currency;
+
+    //Used for helpful math like `mulDiv`
+    using FixedPointMathLib for uint256;
+
+
+    //errors
+
+    error InValidOrder();
+    error NothingToClaim();
+    error NotEnoughToClaim();
+
+    //contructor
+
+    constructor(IPoolManager _manager,string memory _url)BaseHook(_manager) ERC1155(_url){}
+    // BaseHook Functions
+    function getHookPermissions()
+        public
+        pure
+        override
+        returns (Hooks.Permissions memory)
+    {
+        return
+            Hooks.Permissions({
+                beforeInitialize: false,
+                afterInitialize: true,
+                beforeAddLiquidity: false,
+                afterAddLiquidity: false,
+                beforeRemoveLiquidity: false,
+                afterRemoveLiquidity: false,
+                beforeSwap: false,
+                afterSwap: true,
+                beforeDonate: false,
+                afterDonate: false,
+                beforeSwapReturnDelta: false,
+                afterSwapReturnDelta: false,
+                afterAddLiquidityReturnDelta: false,
+                afterRemoveLiquidityReturnDelta: false
+            });
+    }
+
+    function afterInitialize(address,
+    PoolKey calldata key,
+    uint160,
+    int24 tick,
+    bytes calldata)external override onlyByPoolManager returns(bytes4){
+
+        return this.afterInitialize.selector;
+
+    }
+
+    function afterSwap(address sender,
+    PoolKey calldata key,
+    IPoolManager.SwapParams calldata params,
+    BalanceDelta,
+    bytes calldata)external override onlyByPoolManager returns(bytes4,int128){
+
+        return (this.afterSwap.selector,0);
+    }
+    
+
+    
 
 }

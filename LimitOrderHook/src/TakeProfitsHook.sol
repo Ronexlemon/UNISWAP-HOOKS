@@ -125,4 +125,28 @@ contract TakeProfitsHook is BaseHook , ERC1155 {
 
     }
 
+    //placing order
+
+    function placeOrder(
+        PoolKey calldata key,
+        int24 tickToSellAt,
+        bool zeroForOne,
+        uint256 inputAmount
+    ) external returns(int24){
+        //ge the lower actually usable tick given `tickToSellAt
+        int24 tick = getLowerUsableTick(tickToSellAt, key.tickSpacing);
+        //create a pending order
+        uint256 positionId  = getPositionId(key, tick, zeroForOne);
+        claimTokensSupply[positionId] +=inputAmount;
+
+        //Depending on direction of swap, we select the proper input token
+        //and request a transfer of those tokens to the hook contract
+
+        address sellToken = zeroForOne ? Currency.unwrap(key.currency0):Currency.unwrap(key.currency1);
+
+        IERC20(sellToken).transferFrom(msg.sender,address(this), inputAmount);
+
+        return tick;
+    }
+
 }
